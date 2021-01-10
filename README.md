@@ -15,7 +15,7 @@ Gene Expression Omnibus (GEO)
 
 [https://www.ncbi.nlm.nih.gov/gds](https://www.ncbi.nlm.nih.gov/gds)
 
-The public data are also included in **/data** folder.
+All data are also included in **/data** folder.
 
 ## Source code:
 All source code are public and freely accessible in **/code** folder.
