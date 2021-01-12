@@ -4,15 +4,27 @@ library(ggplot2)
 library(WGCNA)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
+rna<-read.table("73CN-AML-RNA-TCGA.csv",sep=',',header=T,row.name=1)
+lbl = as.numeric(rna['CLIC4',] <= median(as.numeric(rna['CLIC4',])))
+lbl[lbl==0] = 2
+label = matrix(ncol=2,nrow=dim(rna)[2])
+label[1:dim(rna)[2],1] = seq(1, dim(rna)[2])
+label[1:dim(rna)[2],2] = lbl
+label = data.frame(label)
+write.table(label, "clic4_label.txt")
+
+
 process_mRNA <- function(){
   #1 low; 2 high
   label<-read.table("clic4_label.txt",header=T)
-  rna<-read.table("73CN_AML_RNA_TCGA.txt",header=T,row.name=1)
+  
+  rna<-read.table("73CN-AML-RNA-TCGA.csv",sep=',',header=T,row.name=1)
   rna<-rna[-which(rowMeans(rna)<0.1),]
   rna<-log2(rna+1)
   
   low<-label[which(label[,2]==1),1]
   high<-label[which(label[,2]==2),1]
+  
   rna_low<-rna[,low]
   rna_high<-rna[,high]
   
@@ -74,7 +86,8 @@ process_miRNA <- function(){
   ### miRNA
   #1 low; 2 high
   label<-read.table("clic4_label.txt",header=T)
-  rna<-read.table("73CN_AML_miRNA_TCGA.txt",header=T,row.name=1)
+  
+  rna<-read.table("73CN-AML-miRNA-TCGA.csv",sep=',',header=T,row.name=1)
   rna<-rna[-which(rowMeans(rna)<0.1),]
   rna<-log2(rna+1)
   
@@ -161,8 +174,7 @@ process_mRNA_miRNA <- function(){
 process_mRNA_miRNA()
 
 process_meth <- function(){
-  
-  data<-read.csv("73CN_AML_cn_meth_TCGA.csv",row.names=1,header=T,sep=",")
+  data<-read.csv("73CN-AML-cn_meth-TCGA.csv",row.names=1,header=T,sep=",")
   label<-read.table("clic4_label.txt",header=T)
   
   low<-label[which(label[,2]==1),1]
